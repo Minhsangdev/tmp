@@ -19,6 +19,7 @@ public class FrmMain extends JFrame {
         JTabbedPane tabs = new JTabbedPane();
         tabs.addTab("Khách hàng", new FrmKhachHang());
         tabs.addTab("Nhân viên", new FrmNhanVien());
+        tabs.addTab("Sản phẩm", new FrmSanPham());
         tabs.addTab("Hóa đơn", new FrmHoaDon());
         add(tabs);
     }
