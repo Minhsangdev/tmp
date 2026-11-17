@@ -10,14 +10,14 @@ import javax.swing.table.DefaultTableModel;
 import dao.KhachHang_DAO;
 import entity.KhachHang;
 
-public class FrmKhachHang extends JPanel implements ActionListener, MouseListener {
+public class frmKhachHang extends JPanel implements ActionListener, MouseListener {
     private JTextField txtMa, txtTen, txtSdt, txtEmail, txtTim;
     private JButton btnThem, btnSua, btnXoa, btnXoaTrang, btnTim, btnTatCa;
     private JTable table;
     private DefaultTableModel model;
     private KhachHang_DAO khDAO = new KhachHang_DAO();
 
-    public FrmKhachHang() {
+    public frmKhachHang() {
         setLayout(new BorderLayout(10, 10));
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 

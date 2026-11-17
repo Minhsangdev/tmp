@@ -13,7 +13,7 @@ import javax.swing.table.DefaultTableModel;
 import dao.NhanVien_DAO;
 import entity.NhanVien;
 
-public class FrmNhanVien extends JPanel implements ActionListener, MouseListener {
+public class frmNhanVien extends JPanel implements ActionListener, MouseListener {
     private JTextField txtMa, txtTen, txtSdt, txtEmail, txtLuong, txtNgay, txtTim;
     private JButton btnThem, btnSua, btnXoa, btnXoaTrang, btnTim, btnTatCa, btnTongLuong;
     private JTable table;
@@ -23,7 +23,7 @@ public class FrmNhanVien extends JPanel implements ActionListener, MouseListener
     private static final DateTimeFormatter FMT = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private static final DecimalFormat DF = new DecimalFormat("#,##0");
 
-    public FrmNhanVien() {
+    public frmNhanVien() {
         setLayout(new BorderLayout(10, 10));
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 

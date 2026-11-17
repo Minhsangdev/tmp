@@ -1,77 +1,106 @@
-use QLBH
-go
-create table NhomSanPham(
-	maNhom char(10) not null primary key,
-	tenNhom nvarchar(20)
-)
 
-create table NhaCungCap(
-	maNCC char(10) not null primary key,
-	tenNCC nvarchar(20),
-	diaChi nvarchar(20),
-	soDienThoai char(10)
-)
+IF DB_ID(N'QLBH') IS NULL
+    EXEC(N'CREATE DATABASE QLBH');
+GO
 
-create table NguoiDung(
-	maNguoiDung char(10) not null primary key,
-	tenNguoiDung nvarchar(20),
-	soDienThoai char(10),
-	email nvarchar(20)
-)
+USE QLBH;
+GO
 
-create table CuaHang(
-	maCuaHang char(10) not null primary key,
-	maSoThue nvarchar(20),
-	tenCuaHang nvarchar(20),
-	diaChi nvarchar(20),
-	soDienThoai char(10)
-)
+-- 1. BANG NHOM SAN PHAM
+CREATE TABLE NhomSanPham (
+    maNhom VARCHAR(10) PRIMARY KEY,
+    tenNhom NVARCHAR(100)
+);
 
-create table SanPham(
-	maSanPham char(10) not null primary key,
-	tenSanPham nvarchar(20),
-	donViTinh nvarchar(20),
-	gia float,
-	maNhomSanPham char(10) not null foreign key references NhomSanPham(maNhom),
-	maNCC char(10) not null foreign key references NhaCungCap(maNCC)
-)
+-- 2. BANG NHA CUNG CAP
+CREATE TABLE NhaCungCap (
+    maNCC VARCHAR(10) PRIMARY KEY,
+    tenNCC NVARCHAR(100),
+    diaChi NVARCHAR(200),
+    soDienThoai VARCHAR(15)
+);
 
-create table NhanVien(
-	maNV char(10) not null primary key,
-	tenNV nvarchar(20),
-	soDienThoai char(10),
-	email nvarchar(20),
-	luong float,
-	ngayLamVien date,
-	maCuaHang char(10) not null foreign key references CuaHang(maCuaHang)
-)
+-- 3. BANG KHACH HANG
+CREATE TABLE KhachHang (
+    maKhachHang VARCHAR(10) PRIMARY KEY,
+    tenKhachHang NVARCHAR(100),
+    soDienThoai VARCHAR(15),
+    email VARCHAR(100)
+);
 
-create table HoaDon(
-	maHoaDon char(10) not null primary key,
-	ngayLapHD nvarchar(20),
-	donGia float,
-	maNguoiDung char(10) not null foreign key references NguoiDung(maNguoiDung),
-	maNV char(10) not null foreign key references NhanVien(maNV)
-)
+-- 4. BANG NHAN VIEN
+CREATE TABLE NhanVien (
+    maNV VARCHAR(10) PRIMARY KEY,
+    tenNV NVARCHAR(100),
+    soDienThoai VARCHAR(15),
+    email VARCHAR(100),
+    luong FLOAT,
+    ngayLamViec DATE
+);
 
-create table HoaDon_SanPham(
-	maHoaDon char(10) not null foreign key references HoaDon(maHoaDon),
-	maSanPham char(10) not null foreign key references SanPham(maSanPham),
-	primary key (maHoaDon, maSanPham)
-)
+-- 5. BANG SAN PHAM
+CREATE TABLE SanPham (
+    maSanPham VARCHAR(10) PRIMARY KEY,
+    tenSanPham NVARCHAR(100),
+    donViTinh NVARCHAR(50),
+    gia FLOAT,
+    maNhomSanPham VARCHAR(10),
+    maNCC VARCHAR(10)
+);
 
-create table ThanhToan(
-	maThanhToan char(10) not null primary key,
-	ngayThanhToan date,
-	maHoaDon char(10) not null foreign key references HoaDon(maHoaDon),
-	nvThanhToan char(10) not null foreign key references NhanVien(maNV)
-)
+-- 6. BANG HOA DON
+CREATE TABLE HoaDon (
+    maHoaDon VARCHAR(10) PRIMARY KEY,
+    ngayLapHD NVARCHAR(20),
+    donGia FLOAT,
+    maKhachHang VARCHAR(10),
+    maNhanVien VARCHAR(10)
+);
 
-create table TonKho(
-	maSanPham char(10) not null foreign key references SanPham(maSanPham),
-	maCuaHang char(10) not null foreign key references CuaHang(maCuaHang),
-	soLuong int,
-	soLuongToiDa int,
-	slToiThieu int,
-	primary key (maSanPham, maCuaHang)
-)
+-- 7. BANG CHI TIET HOA DON
+CREATE TABLE ChiTietHoaDon (
+    maHoaDon VARCHAR(10),
+    maSanPham VARCHAR(10),
+    ngayLapHoaDon DATE,
+    PRIMARY KEY (maHoaDon, maSanPham)
+);
+GO
+
+-- TAO KHOA NGOAI
+
+-- SanPham -> NhomSanPham
+ALTER TABLE SanPham
+ADD CONSTRAINT FK_SP_Nhom
+FOREIGN KEY (maNhomSanPham)
+REFERENCES NhomSanPham(maNhom);
+
+-- SanPham -> NhaCungCap
+ALTER TABLE SanPham
+ADD CONSTRAINT FK_SP_NCC
+FOREIGN KEY (maNCC)
+REFERENCES NhaCungCap(maNCC);
+
+-- HoaDon -> KhachHang
+ALTER TABLE HoaDon
+ADD CONSTRAINT FK_HD_KH
+FOREIGN KEY (maKhachHang)
+REFERENCES KhachHang(maKhachHang);
+
+-- HoaDon -> NhanVien
+ALTER TABLE HoaDon
+ADD CONSTRAINT FK_HD_NV
+FOREIGN KEY (maNhanVien)
+REFERENCES NhanVien(maNV);
+
+-- ChiTietHoaDon -> HoaDon
+ALTER TABLE ChiTietHoaDon
+ADD CONSTRAINT FK_CTHD_HD
+FOREIGN KEY (maHoaDon)
+REFERENCES HoaDon(maHoaDon);
+
+-- ChiTietHoaDon -> SanPham
+ALTER TABLE ChiTietHoaDon
+ADD CONSTRAINT FK_CTHD_SP
+FOREIGN KEY (maSanPham)
+REFERENCES SanPham(maSanPham);
+GO

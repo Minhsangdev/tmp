@@ -13,25 +13,33 @@ public class ConnectDB {
 	}
 	
 	public void connect() {
-		String url = "";
+String url = "jdbc:sqlserver://localhost:1433;"
+		           + "databaseName=QLBH;"
+		           + "encrypt=true;"
+		           + "trustServerCertificate=true;";
 		String user = "sa";
-		String password = "sapassword";
+		String password = System.getenv("QLBH_DB_PASSWORD");
 		
 		try {
-			con = DriverManager.getConnection(url, user, password);
+			if(con == null || con.isClosed()) {
+				con = DriverManager.getConnection(url, user, password);				
+			}
 		} catch (SQLException e) {
 			// TODO: handle exception
 			e.printStackTrace();
 		}
 	
 	}
-	public static void disconncet() {
+	public static void disconnect() {
 		if(con != null) {
 			try {
 				con.close();
 			} catch (SQLException e) {
 				// TODO: handle exception
 				e.printStackTrace();
+			}
+			finally {
+				con = null;
 			}
 		}
 	}
